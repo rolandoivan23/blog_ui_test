@@ -1,10 +1,13 @@
 import { Page } from "@playwright/test";
 import { HomePage } from "./pages/home";
+import { LoginPage } from "./pages/login";
 
 export class PagesManager {
+    
     private static instance: PagesManager | null = null;
     private readonly page: Page;
     private homePage: HomePage;
+    private loginPage: LoginPage;
 
     constructor(page: Page){
         this.page = page;
@@ -19,6 +22,12 @@ export class PagesManager {
             PagesManager.instance = new PagesManager(page);
         }
         return PagesManager.instance;
+    }
+
+    onLoginPage() {
+       if(!this.loginPage)
+            this.loginPage = new LoginPage(this.page);
+        return this.loginPage;
     }
 
     onHomePage(): HomePage{

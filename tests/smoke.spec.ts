@@ -1,6 +1,18 @@
 import { test, expect } from '@playwright/test';
 import { PagesManager } from '../pom/PagesManager';
 
+test('Login Test', async ({page}) => {
+  await page.goto('http://localhost:3000/');
+  const loginPage = PagesManager.getInstance(page).onLoginPage();
+
+  await loginPage.login('rolando.vazquez@hey.com', '123pum');
+  await loginPage.logout(); 
+  /*await loginPage.login('rolando.vazquez@hey.com', '123pum');
+  //await loginPage.logout(false);
+  await loginPage.logout();*/
+  await loginPage.validateWrongData();
+});
+
 
 test('Blog Menu', async ({page}) => {
   await page.goto('https://blog.mexclouds.com/');

@@ -8,7 +8,7 @@ export class LoginPage extends BasePage {
 
     async login(username: string, password: string) {
         await this.page.getByRole("link", { name: "Login" }).click();
-        await this.fillLoginForm(username, password);
+        await this.submitLoginForm(username, password);
 
         await expect(this.page.locator('.left-sidebar > .user-profile')).toBeVisible()
     }
@@ -38,37 +38,35 @@ export class LoginPage extends BasePage {
 
     async validateWrongData() {
         await this.page.getByRole("link", { name: "Login" }).click();
-        await this.fillLoginForm('rolando.vazquez@hey.com', 'wrongpassword');
+        await this.submitLoginForm('rolando.vazquez@hey.com', 'wrongpassword');
 
         await expect(this.page.locator('[style="color:red"]')).toBeVisible();
 
         await this.page.reload();
 
-        await this.fillLoginForm('rolando.vazquezrolando.vazquezrolando.vazquez@hrolando.vazquezrolando.vazquezey.com', 'wrongpassword');
+        await this.submitLoginForm('rolando.vazquezrolando.vazquezrolando.vazquez@hrolando.vazquezrolando.vazquezey.com', 'wrongpassword');
 
         await expect(this.page.locator('[style="color:red"]')).toBeVisible();
 
         await this.page.reload();
 
-        await this.fillLoginForm('', '');
+        await this.submitLoginForm('', '');
 
-        await this.fillLoginForm(' ', ' ');
+        await this.submitLoginForm(' ', ' ');
 
-        await this.fillLoginForm('rolando.vazquez@hey.com', '');
+        await this.submitLoginForm('rolando.vazquez@hey.com', '');
 
-        await this.fillLoginForm('rolando.vazquez@hey.com', ' ');
+        await this.submitLoginForm('rolando.vazquez@hey.com', ' ');
 
         await expect(this.page.locator('[style="color:red"]')).toBeVisible()
     }
 
-    async fillLoginForm(username: string, password: string, submit: boolean = true) {
+    async fillLoginForm(username: string, password: string) {
         await this.page.locator("#email_address").fill(username);
         await this.page.locator("#password").fill(password);
-        if(submit) {
-            await this.submitLoginForm();
-        }
     }
-    async submitLoginForm() {
+    async submitLoginForm(username: string, password: string) {
+        await this.fillLoginForm(username, password);
         await this.page.getByRole("button", { name: "Sign in" }).click();
     }
 

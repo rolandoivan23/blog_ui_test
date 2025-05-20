@@ -1,6 +1,8 @@
 import { Page } from "@playwright/test";
 import { HomePage } from "./pages/home";
 import { LoginPage } from "./pages/login";
+import { ContactPage } from "./pages/contact";
+import { AboutPage } from "./pages/about";
 
 export class PagesManager {
     
@@ -8,6 +10,8 @@ export class PagesManager {
     private readonly page: Page;
     private homePage: HomePage;
     private loginPage: LoginPage;
+    private contactPage: ContactPage;
+    private aboutPage: AboutPage;
 
     constructor(page: Page){
         this.page = page;
@@ -34,5 +38,17 @@ export class PagesManager {
         if(!this.homePage)
             this.homePage = new HomePage(this.page);
         return this.homePage;
+    }
+
+    onContactPage(): ContactPage {
+        if (!this.contactPage)
+            this.contactPage = new ContactPage(this.page);
+        return this.contactPage;
+    }
+
+    onAboutPage(): AboutPage {
+        if (!this.aboutPage)
+            this.aboutPage = new AboutPage(this.page);
+        return this.aboutPage;
     }
 }

@@ -36,3 +36,17 @@ test('Blog Menu', async ({page}) => {
     await expect(page.getByText(menuItems[item]).first()).toBeVisible({timeout: 10000});
   }
 });
+
+test('About/Contact Info', async ({page}) => {
+  
+  await page.goto('http://blog.mexclouds.com/');
+  const contactPage = PagesManager.getInstance(page).onContactPage();
+  const aboutPage = PagesManager.getInstance(page).onAboutPage();
+  
+  await page.getByRole('navigation').getByRole('link', { name: 'About' }).click();
+  await aboutPage.validateElements();
+  await page.getByRole('navigation').getByRole('link', { name: 'Contact' }).click();
+  await contactPage.validateElements();
+  await contactPage.submitForm('Rolando Vázquez', 'emailtest@email.com', 'Test message');
+  await expect(page.getByRole('article')).toContainText('Hemos recibido tu peticion');
+});

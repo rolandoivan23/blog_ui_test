@@ -63,7 +63,9 @@ test('Categories smoke test', async ({page}) => {
   await categoriesPage.validateNoCreationWithoutName();
   const randomNumber = Math.floor(Math.random() * 1000);
   const categoryName = `Categoria de prueba ${randomNumber}`;
-  await categoriesPage.createCategory(categoryName, 'Esta es una categoria creada por la automatizacion');
+  await categoriesPage.createCategory(categoryName, 
+                                    'Esta es una categoria creada por la automatizacion',
+                                    ['Recent']);
   await categoriesPage.navigateTo();
   await categoriesPage.validateCategoryInTag(categoryName, 'All');
   await categoriesPage.validateCategoryNotInTag(categoryName, 'Trending');

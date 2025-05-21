@@ -13,12 +13,8 @@ export class CategoriesPage extends BasePage {
         
     }
     
-    async createCategory(name: string, description: string) {
-        await this.page.getByRole('textbox', { name: 'Name' }).fill(name);
-        await this.page.getByRole('textbox', { name: 'Name' }).press('Tab');
-        await this.page.getByRole('textbox', { name: 'Description' }).fill(description);
-        await this.page.getByRole('checkbox', { name: 'Recent' }).check();
-        await this.page.getByRole('button', { name: 'Create Category' }).click();
+    async createCategory(name: string, description: string, tagsToSelect: string[] = []) {
+        await this.submitForm(name, description, tagsToSelect);
         await expect(this.page.getByRole('article')).toContainText('Category was successfully created.');
     }
 
@@ -60,15 +56,17 @@ export class CategoriesPage extends BasePage {
         await expect(this.page.getByText(categoryName)).toBeVisible();
     }
 
-    async submitForm(name: string, email: string, message: string) {
-        const nameField = this.page.getByRole('textbox', { name: 'Your full name' });
-        const emailField = this.page.getByRole('textbox',{ name: 'you@example.com' });
+    async fillNewCategoryForm(name: string, description: string, tagsToSelect: string[] = []) {
+        await this.page.getByRole('textbox', { name: 'Name' }).fill(name);
+        await this.page.getByRole('textbox', { name: 'Name' }).press('Tab');
+        await this.page.getByRole('textbox', { name: 'Description' }).fill(description);
+        for (const tag of tagsToSelect) 
+            await this.page.getByRole('checkbox', { name: tag }).check();
+        
+    }
 
-        await nameField.fill(name);
-        await nameField.press('Tab');
-        await emailField.fill(email);
-        await emailField.press('Tab');
-        await this.page.getByRole('textbox', { name: 'How can I help you?' }).fill(message);
-        await this.page.getByRole('button', { name: 'Send' }).click();
+    async submitForm(name: string, email: string, tagsToSelect: string[] = []) {
+        await this.fillNewCategoryForm(name, email, tagsToSelect);
+        await this.page.getByRole('button', { name: 'Create Category' }).click();
     }
 }

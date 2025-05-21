@@ -62,6 +62,7 @@ export class LoginPage extends BasePage {
     }
 
     async fillLoginForm(username: string, password: string) {
+        await this.page.locator("#email_address").waitFor({ state: "attached" });
         await this.page.locator("#email_address").fill(username);
         await this.page.locator("#password").fill(password);
     }

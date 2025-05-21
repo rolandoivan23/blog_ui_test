@@ -52,7 +52,7 @@ test('About/Contact Info', async ({page}) => {
 });
 
 test('Categories smoke test', async ({page}) => {
-  await page.goto('https://blog.mexclouds.com/');
+  await page.goto('http://localhost:3000/');
   await page.getByRole('navigation').getByRole('link', { name: 'Categories' }).click();
   await expect(page.getByRole('article')).toContainText('Explore Categories');
   await expect(page.getByRole('button', { name: '+' })).toBeVisible();
@@ -70,21 +70,23 @@ test('Categories smoke test', async ({page}) => {
   await page.getByRole('button', { name: '+' }).click();
   const randomNumber = Math.floor(Math.random() * 1000);
   await page.getByRole('textbox', { name: 'Name' }).waitFor({ state: 'attached' });
+  await page.getByRole('textbox', { name: 'Description' }).fill('Esta es una categoria creada por la automatizacion');
+  await page.getByRole('button', { name: 'Create Category' }).click();
+  await expect(page.getByText("Name can't be blank")).toBeVisible(); 
   await page.getByRole('textbox', { name: 'Name' }).fill(`Categoria de prueba ${randomNumber}`);
   await page.getByRole('textbox', { name: 'Name' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Description' }).fill('Esta es una categoria creada por la automatizacion');
   await page.getByRole('checkbox', { name: 'Recent' }).check();
   await page.getByRole('button', { name: 'Create Category' }).click();
   await expect(page.getByRole('article')).toContainText('Category was successfully created.');
   await page.getByRole('link', { name: 'Back to categories' }).click();
   await expect(page.getByText(`Categoria de prueba ${randomNumber}`)).toBeVisible();
   await page.getByRole('button', { name: 'Trending' }).click();
-  await page.waitForResponse('https://blog.mexclouds.com/categories?tag=Trending');
+  await page.waitForResponse('http://localhost:3000/categories?tag=Trending');
   await expect(page.getByText(`Categoria de prueba ${randomNumber}`)).not.toBeVisible();
   await page.getByRole('button', { name: 'Popular' }).click();
-  await page.waitForResponse('https://blog.mexclouds.com/categories?tag=Popular');
+  await page.waitForResponse('http://localhost:3000/categories?tag=Popular');
   await expect(page.getByText(`Categoria de prueba ${randomNumber}`)).not.toBeVisible();
   await page.getByRole('button', { name: 'Recent' }).click();
-  await page.waitForResponse('https://blog.mexclouds.com/categories?tag=Recent');
+  await page.waitForResponse('http://localhost:3000/categories?tag=Recent');
   await expect(page.getByText(`Categoria de prueba ${randomNumber}`).first()).toBeVisible();
 })

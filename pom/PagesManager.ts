@@ -3,6 +3,7 @@ import { HomePage } from "./pages/home";
 import { LoginPage } from "./pages/login";
 import { ContactPage } from "./pages/contact";
 import { AboutPage } from "./pages/about";
+import { CategoriesPage } from "./pages/categories";
 
 export class PagesManager {
     
@@ -12,6 +13,7 @@ export class PagesManager {
     private loginPage: LoginPage;
     private contactPage: ContactPage;
     private aboutPage: AboutPage;
+    private categoriesPage: CategoriesPage;
 
     constructor(page: Page){
         this.page = page;
@@ -44,6 +46,12 @@ export class PagesManager {
         if (!this.contactPage)
             this.contactPage = new ContactPage(this.page);
         return this.contactPage;
+    }
+
+    onCategoriesPage(): CategoriesPage {
+        if (!this.categoriesPage)
+            this.categoriesPage = new CategoriesPage(this.page);
+        return this.categoriesPage;
     }
 
     onAboutPage(): AboutPage {

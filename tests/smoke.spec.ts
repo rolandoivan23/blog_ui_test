@@ -53,40 +53,20 @@ test('About/Contact Info', async ({page}) => {
 
 test('Categories smoke test', async ({page}) => {
   await page.goto('http://localhost:3000/');
-  await page.getByRole('navigation').getByRole('link', { name: 'Categories' }).click();
-  await expect(page.getByRole('article')).toContainText('Explore Categories');
-  await expect(page.getByRole('button', { name: '+' })).toBeVisible();
-  await expect(page.getByText('Ruby on Rails')).toBeVisible();//Default category
-  await expect(page.getByRole('button', { name: 'All' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Popular' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Recent' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Trending' })).toBeVisible();
-  await page.getByRole('button', { name: '+' }).click();
-  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
+  const categoriesPage = PagesManager.getInstance(page).onCategoriesPage();
   const loginPage = PagesManager.getInstance(page).onLoginPage();
 
+  await categoriesPage.navigateTo();
+  await categoriesPage.validateElements();
+  await categoriesPage.validateNoCreationWithoutSession();
   await loginPage.login('rolando.vazquez@hey.com', '123pum');
-  await page.getByRole('navigation').getByRole('link', { name: 'Categories' }).click();
-  await page.getByRole('button', { name: '+' }).click();
+  await categoriesPage.validateNoCreationWithoutName();
   const randomNumber = Math.floor(Math.random() * 1000);
-  await page.getByRole('textbox', { name: 'Name' }).waitFor({ state: 'attached' });
-  await page.getByRole('textbox', { name: 'Description' }).fill('Esta es una categoria creada por la automatizacion');
-  await page.getByRole('button', { name: 'Create Category' }).click();
-  await expect(page.getByText("Name can't be blank")).toBeVisible(); 
-  await page.getByRole('textbox', { name: 'Name' }).fill(`Categoria de prueba ${randomNumber}`);
-  await page.getByRole('textbox', { name: 'Name' }).press('Tab');
-  await page.getByRole('checkbox', { name: 'Recent' }).check();
-  await page.getByRole('button', { name: 'Create Category' }).click();
-  await expect(page.getByRole('article')).toContainText('Category was successfully created.');
-  await page.getByRole('link', { name: 'Back to categories' }).click();
-  await expect(page.getByText(`Categoria de prueba ${randomNumber}`)).toBeVisible();
-  await page.getByRole('button', { name: 'Trending' }).click();
-  await page.waitForResponse('http://localhost:3000/categories?tag=Trending');
-  await expect(page.getByText(`Categoria de prueba ${randomNumber}`)).not.toBeVisible();
-  await page.getByRole('button', { name: 'Popular' }).click();
-  await page.waitForResponse('http://localhost:3000/categories?tag=Popular');
-  await expect(page.getByText(`Categoria de prueba ${randomNumber}`)).not.toBeVisible();
-  await page.getByRole('button', { name: 'Recent' }).click();
-  await page.waitForResponse('http://localhost:3000/categories?tag=Recent');
-  await expect(page.getByText(`Categoria de prueba ${randomNumber}`).first()).toBeVisible();
+  const categoryName = `Categoria de prueba ${randomNumber}`;
+  await categoriesPage.createCategory(categoryName, 'Esta es una categoria creada por la automatizacion');
+  await categoriesPage.navigateTo();
+  await categoriesPage.validateCategoryInTag(categoryName, 'All');
+  await categoriesPage.validateCategoryNotInTag(categoryName, 'Trending');
+  await categoriesPage.validateCategoryNotInTag(categoryName, 'Popular');
+  await categoriesPage.validateCategoryInTag(categoryName, 'Recent');
 })

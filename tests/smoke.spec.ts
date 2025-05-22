@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { PagesManager } from '../pom/PagesManager';
 
+test.beforeEach(async ({page}) => {
+  await page.goto(PagesManager.getInstance(page).getBasePage().env['BASE_URL']);
+});
+
 test('Login Test', async ({page}) => {
-  await page.goto('http://localhost:3000/');
   const loginPage = PagesManager.getInstance(page).onLoginPage();
 
-  await loginPage.login('rolando.vazquez@hey.com', '123pum');
+  await loginPage.login(loginPage.env.USERS.test1.username, loginPage.env.USERS.test1.password);
   await loginPage.logout(); 
   /*await loginPage.login('rolando.vazquez@hey.com', '123pum');
   //await loginPage.logout(false);
@@ -15,7 +18,6 @@ test('Login Test', async ({page}) => {
 
 
 test('Blog Menu', async ({page}) => {
-  await page.goto('https://blog.mexclouds.com/');
   const homePage = PagesManager.getInstance(page).onHomePage();
 
   const headerTitle = page.locator('header h1');
@@ -38,11 +40,9 @@ test('Blog Menu', async ({page}) => {
 });
 
 test('About/Contact Info', async ({page}) => {
-  
-  await page.goto('http://blog.mexclouds.com/');
   const contactPage = PagesManager.getInstance(page).onContactPage();
   const aboutPage = PagesManager.getInstance(page).onAboutPage();
-  
+    
   await page.getByRole('navigation').getByRole('link', { name: 'About' }).click();
   await aboutPage.validateElements();
   await page.getByRole('navigation').getByRole('link', { name: 'Contact' }).click();
@@ -52,14 +52,13 @@ test('About/Contact Info', async ({page}) => {
 });
 
 test('Categories smoke test', async ({page}) => {
-  await page.goto('http://localhost:3000/');
   const categoriesPage = PagesManager.getInstance(page).onCategoriesPage();
   const loginPage = PagesManager.getInstance(page).onLoginPage();
 
   await categoriesPage.navigateTo();
   await categoriesPage.validateElements();
   await categoriesPage.validateNoCreationWithoutSession();
-  await loginPage.login('rolando.vazquez@hey.com', '123pum');
+  await loginPage.login(loginPage.env.USERS.test1.username, loginPage.env.USERS.test1.password);
   await categoriesPage.validateNoCreationWithoutName();
   const randomNumber = Math.floor(Math.random() * 1000);
   const categoryName = `Categoria de prueba ${randomNumber}`;

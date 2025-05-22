@@ -1,6 +1,5 @@
 import { expect, Page } from "@playwright/test";
 import { BasePage } from "../BasePage";
-import { PagesManager } from "../PagesManager";
 
 export class CategoriesPage extends BasePage {
     constructor(page: Page) {
@@ -42,12 +41,12 @@ export class CategoriesPage extends BasePage {
 
     async validateCategoryNotInTag(categoryName: string, tagName: string = 'All') {
         await this.page.getByRole('button', { name: tagName }).click();
-        await this.page.waitForResponse(`http://localhost:3000/categories?tag=${tagName}`);
+        await this.page.waitForResponse(`${this.env['BASE_URL']}/categories?tag=${tagName}`);
         await expect(this.page.getByText(categoryName)).not.toBeVisible();
     }
 
     async validateCategoryInTag(categoryName: string, tagName: string = 'All') {
-        let url = `http://localhost:3000/categories`;
+        let url = `${this.env['BASE_URL']}/categories`;
         if(tagName !== 'All') {
             await this.page.getByRole('button', { name: tagName }).click();
             url += `?tag=${tagName}`;

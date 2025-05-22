@@ -1,0 +1,21 @@
+{
+    "DEV": {
+        "BASE_URL": "http://localhost:3000",
+        "USERS": {
+            "test1": {
+                "username": "rolando.vazquez@hey.com",
+                "password": "123pum" 
+            }
+        }
+        
+    },
+    "PRODUCTION": {
+        "BASE_URL": "https://blog.mexclouds.com",
+        "USERS": {
+            "test1": {
+                "username": "rolando.vazquez@hey.com",
+                "password": "123pum" 
+            }
+        }   
+    }
+}

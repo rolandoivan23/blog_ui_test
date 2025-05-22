@@ -38,7 +38,7 @@ export class LoginPage extends BasePage {
 
     async validateWrongData() {
         await this.page.getByRole("link", { name: "Login" }).click();
-        await this.submitLoginForm('rolando.vazquez@hey.com', 'wrongpassword');
+        await this.submitLoginForm(this.env.USERS.test1.username, 'wrongpassword');
 
         await expect(this.page.locator('[style="color:red"]')).toBeVisible();
 
@@ -54,9 +54,9 @@ export class LoginPage extends BasePage {
 
         await this.submitLoginForm(' ', ' ');
 
-        await this.submitLoginForm('rolando.vazquez@hey.com', '');
+        await this.submitLoginForm(this.env.USERS.test1.username, '');
 
-        await this.submitLoginForm('rolando.vazquez@hey.com', ' ');
+        await this.submitLoginForm(this.env.USERS.test1.username, ' ');
 
         await expect(this.page.locator('[style="color:red"]')).toBeVisible()
     }

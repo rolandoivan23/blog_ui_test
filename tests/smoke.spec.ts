@@ -71,3 +71,8 @@ test('Categories smoke test', async ({page}) => {
   await categoriesPage.validateCategoryNotInTag(categoryName, 'Popular');
   await categoriesPage.validateCategoryInTag(categoryName, 'Recent');
 })
+
+test('Posts smoke', async ({page}) => {
+  const postsPage = PagesManager.getInstance(page).onPostsPage();
+  await postsPage.validatePostElements('The first post - I really love Ruby on Rails');
+});

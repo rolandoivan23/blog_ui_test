@@ -7,7 +7,7 @@ export class BasePage {
   
     constructor(page: Page) {
         this.page = page;
-        this.env = env['PRODUCTION'];
+        this.env = env['DEV'];
     }
   
     async navigateTo(menuItem: string) {

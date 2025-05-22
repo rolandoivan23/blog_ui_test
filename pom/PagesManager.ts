@@ -5,6 +5,7 @@ import { ContactPage } from "./pages/contact";
 import { AboutPage } from "./pages/about";
 import { CategoriesPage } from "./pages/categories";
 import { BasePage } from "./BasePage";
+import { PostsPage } from "./pages/posts";
 
 export class PagesManager {
     
@@ -16,6 +17,7 @@ export class PagesManager {
     private aboutPage: AboutPage;
     private categoriesPage: CategoriesPage;
     private basePage: BasePage;
+    private postsPage: PostsPage;
 
     constructor(page: Page){
         this.page = page;
@@ -66,6 +68,12 @@ export class PagesManager {
         if (!this.aboutPage)
             this.aboutPage = new AboutPage(this.page);
         return this.aboutPage;
+    }
+
+    onPostsPage(): PostsPage {
+        if (!this.postsPage)
+            this.postsPage = new PostsPage(this.page);
+        return this.postsPage;
     }
 
 }

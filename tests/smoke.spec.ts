@@ -75,4 +75,7 @@ test('Categories smoke test', async ({page}) => {
 test('Posts smoke', async ({page}) => {
   const postsPage = PagesManager.getInstance(page).onPostsPage();
   await postsPage.validatePostElements('The first post - I really love Ruby on Rails');
+  const loginPage = PagesManager.getInstance(page).onLoginPage();
+  await loginPage.login(loginPage.env.USERS.test1.username, loginPage.env.USERS.test1.password);
+  await postsPage.validateCommentsCreationAtHome('This is a test comment made by the automation');
 });

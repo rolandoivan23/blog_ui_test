@@ -77,5 +77,7 @@ test('Posts smoke', async ({page}) => {
   await postsPage.validatePostElements('The first post - I really love Ruby on Rails');
   const loginPage = PagesManager.getInstance(page).onLoginPage();
   await loginPage.login(loginPage.env.USERS.test1.username, loginPage.env.USERS.test1.password);
-  await postsPage.validateCommentsCreationAtHome('This is a test comment made by the automation');
+  const post = await postsPage.findPost('The first post - I really love Ruby on Rails');
+  await postsPage.validateCommentsCreationAtHome('This is a test comment made by the automation', post);
+  await postsPage.validateCommentsCreationAtShow('This is a test comment made by the automation / inside show view', post);
 });

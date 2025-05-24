@@ -6,13 +6,13 @@ export class PostsPage extends BasePage {
         super(page);
     }
 
-    
-    
-    async createComment(commentText: string, post: Locator) {
+    async createComment(commentText: string, post: Locator):Promise<Locator> {
         await post.getByPlaceholder('Share your thoughts...').waitFor({state: 'attached'});
         await post.getByPlaceholder('Share your thoughts...').fill(commentText);
         await post.getByText('Post Comment').click();
-        await expect(this.page.getByText(commentText).first()).toBeVisible();
+        const comment = this.page.getByText(commentText);
+        await expect(comment).toBeVisible();
+        return comment.locator('..').locator('..');
     }   
     
     async getPostId(post: Locator): Promise<number>{   
@@ -32,7 +32,7 @@ export class PostsPage extends BasePage {
     }
 
     async validateCommentsCreationAtHome(commentText: string, post: Locator) {
-        this.createComment(commentText, post);
+        await this.validateCommentButtons(await this.createComment(commentText, post));
     }
     
     async validateCommentsCreationAtShow(commentText: string, post: Locator) {
@@ -40,7 +40,18 @@ export class PostsPage extends BasePage {
         //de un post desde la vista de home, ya que se usa hotwire para cargar los elementos
         //y no se recarga la pagina y por lo tanto sigue encontrando mas de un elemento
         await this.page.goto(this.env['BASE_URL'] + '/posts/' + await this.getPostId(post));
-        await this.createComment(commentText, post);
+        await this.validateCommentButtons(await this.createComment(commentText, post));
+    }
+
+    async validateCommentButtons(comment: Locator) {
+        await expect(comment.getByText('Like (0)')).toBeVisible();
+        await expect(comment.getByText('Reply')).toBeVisible();
+        await expect(comment.getByText('Share')).toBeVisible();
+        await expect(comment.getByText('Delete')).toBeVisible();
+        await expect(comment.getByText(this.env.USERS.test1.username)).toBeVisible();
+        await expect(comment.locator('.comment-time')).toHaveText('a second ago')
+        await expect(comment.locator('.comment-avatar')).toBeVisible();
+
     }
     
     async validatePostElements(name: string) {
@@ -53,5 +64,6 @@ export class PostsPage extends BasePage {
         await expect(post.locator('.comments-count')).toBeVisible();
         await expect(post.getByPlaceholder('Share your thoughts...')).toBeVisible();
         await expect(post.getByText('Post Comment')).toBeVisible();
+        
     }
 }

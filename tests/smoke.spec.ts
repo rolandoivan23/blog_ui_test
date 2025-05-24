@@ -78,6 +78,7 @@ test('Posts smoke', async ({page}) => {
   const loginPage = PagesManager.getInstance(page).onLoginPage();
   await loginPage.login(loginPage.env.USERS.test1.username, loginPage.env.USERS.test1.password);
   const post = await postsPage.findPost('The first post - I really love Ruby on Rails');
-  await postsPage.validateCommentsCreationAtHome('This is a test comment made by the automation', post);
-  await postsPage.validateCommentsCreationAtShow('This is a test comment made by the automation / inside show view', post);
+  const randomNumber = Math.floor(Math.random() * 10000);
+  await postsPage.validateCommentsCreationAtHome('This is a test comment made by the automation' + randomNumber, post);
+  await postsPage.validateCommentsCreationAtShow('This is a test comment made by the automation / inside show view' + randomNumber, post);
 });

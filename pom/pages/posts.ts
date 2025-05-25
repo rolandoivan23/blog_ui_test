@@ -14,6 +14,17 @@ export class PostsPage extends BasePage {
         await expect(comment).toBeVisible();
         return comment.locator('..').locator('..');
     }   
+
+    async createPost(name: string, content: string): Promise<Locator> {
+        await this.page.getByRole('link', { name: 'New Post' }).click();
+        await this.page.locator('#post_title').waitFor({ state: 'attached' });
+        await this.page.locator('#post_title').fill(name);
+        await this.page.locator('#post_body').fill(content);
+        await this.page.getByRole('button', { name: 'Create Post' }).click();
+        const post = this.page.getByText(name);
+        await expect(post).toBeVisible();
+        return post.locator('..'); //gets div.post-content  
+    }
     
     async getPostId(post: Locator): Promise<number>{   
         const commentForm = post.locator('.comment-form form');

@@ -81,4 +81,10 @@ test('Posts smoke', async ({page}) => {
   const randomNumber = Math.floor(Math.random() * 10000);
   await postsPage.validateCommentsCreationAtHome('This is a test comment made by the automation' + randomNumber, post);
   await postsPage.validateCommentsCreationAtShow('This is a test comment made by the automation / inside show view' + randomNumber, post);
+  await postsPage.createPost('Post created by the automation ' + randomNumber,
+                            'This is a post created by the automation test ' + randomNumber);
+  const homePage = PagesManager.getInstance(page).onHomePage();
+  await homePage.navigateTo('Home');
+  const newPost = await postsPage.findPost('Post created by the automation ' + randomNumber);
+  await expect(newPost).toBeVisible();
 });
